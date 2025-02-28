@@ -8,6 +8,12 @@
 
 #include<string>
 
+#include<vector>
+
+#include<numbers>
+
 #include"Constants.h"
 
 #include"assets.h"
+
+#include"space_ship.h"
