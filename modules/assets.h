@@ -4,8 +4,6 @@ sf::Font font;
 
 sf::Text small_text, medium_text, large_text;
 
-bb::Exhaust rocket_exhaust, reverse_thrust;
-
 
 
 class ASSET_LOADER

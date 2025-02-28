@@ -12,8 +12,12 @@
 
 #include<numbers>
 
+#include<concepts>
+
 #include"Constants.h"
 
 #include"assets.h"
+
+#include"vector_sprite.h"
 
 #include"space_ship.h"

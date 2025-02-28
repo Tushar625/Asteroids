@@ -1,28 +1,163 @@
 #pragma once
 
-class space_ship_class : public sf::Drawable, public sf::Transformable
+#define SPACESHIP_ACCN 100.0f
+#define SPACESHIP_ROTATION_SPEED 200.0f
+#define	SPACESHIP_SIZE 20
+#define	SPACESHIP_HALF_SIZE 10
+
+
+class space_ship_class
 {
-	std::vector<sf::Vertex> point;
+	vector_sprite_class sprite;
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
-	{
-		states.transform *= getTransform();
+	bb::Exhaust thrust, reverse_thrust;
 
-		states.texture = NULL;
-
-		target.draw(&point[0], 5, sf::LineStrip, states);
-	}
+	sf::Vector2f velocity, accn;
 
 	public:
 
-	space_ship_class() : point{ 5 }
+	space_ship_class() : velocity{ 0, 0 }, accn{ SPACESHIP_ACCN, 0 }
 	{
-		point[0].position = point[4].position = { 20, 10 };
+		sprite.set_local_points(
+			sf::Vector2f{ SPACESHIP_SIZE, SPACESHIP_HALF_SIZE },
+			sf::Vector2f{ 0, 0 },
+			sf::Vector2f{ SPACESHIP_SIZE / 4, SPACESHIP_HALF_SIZE },
+			sf::Vector2f{ 0, SPACESHIP_SIZE },
+			sf::Vector2f{ SPACESHIP_SIZE, SPACESHIP_HALF_SIZE }
+		);
 
-		point[1].position = { 0, 0 };
+		sprite.setOrigin(sf::Vector2f(SPACESHIP_HALF_SIZE, SPACESHIP_HALF_SIZE));
 
-		point[2].position = { 5, 10 };
+		sprite.setPosition(sf::Vector2f(100, 100));
 
-		point[3].position = { 0, 20 };
+
+		thrust.setGap(5);
+
+		thrust.setMaxVelocity(300);
+
+		thrust.setAngle(15);
+
+
+		reverse_thrust.setGap(5);
+
+		reverse_thrust.setMaxVelocity(300);
+
+		reverse_thrust.setAngle(15);
 	}
+
+	void update(double dt)
+	{
+		if (bb::INPUT.isHeld(sf::Keyboard::Scan::Left))
+		{
+			sprite.rotate(-SPACESHIP_ROTATION_SPEED * dt);
+
+			// updating accn according to new direction
+
+			accn = {
+				cos(std::numbers::pi_v<float> / 180 * sprite.getRotation()) * SPACESHIP_ACCN,
+				sin(std::numbers::pi_v<float> / 180 * sprite.getRotation()) * SPACESHIP_ACCN
+			};
+		}
+
+		if (bb::INPUT.isHeld(sf::Keyboard::Scan::Right))
+		{
+			sprite.rotate(SPACESHIP_ROTATION_SPEED * dt);
+
+			// updating accn according to new direction
+
+			accn = {
+				cos(std::numbers::pi_v<float> / 180 * sprite.getRotation()) * SPACESHIP_ACCN,
+				sin(std::numbers::pi_v<float> / 180 * sprite.getRotation()) * SPACESHIP_ACCN
+			};
+		}
+
+		// space ship is propelled forward
+
+		thrust.setSource(sprite.getPosition());
+
+		if (bb::INPUT.isHeld(sf::Keyboard::Scan::Up))
+		{
+			thrust.setDirection(sprite.getRotation() + 180);
+
+			thrust.spray();
+
+			// accelerate the spaceship
+
+			velocity.x += accn.x * dt;
+
+			velocity.y += accn.y * dt;
+		}
+
+		// space ship is propelled backward
+
+		reverse_thrust.setSource(sprite.getPosition());
+
+		if (bb::INPUT.isHeld(sf::Keyboard::Scan::Down))
+		{
+			reverse_thrust.setDirection(sprite.getRotation() + 45);
+
+			reverse_thrust.spray();
+
+			reverse_thrust.setDirection(sprite.getRotation() - 45);
+
+			reverse_thrust.spray();
+
+			// decelerate the spaceship
+
+			velocity.x -= accn.x * dt;
+
+			velocity.y -= accn.y * dt;
+		}
+
+		// updating position of spaceship according to it's velocity
+
+		sprite.move(sf::Vector2f(velocity.x * dt, velocity.y * dt));
+
+		// updating exhaust gases
+
+		thrust.update(dt);
+
+		reverse_thrust.update(dt);
+
+		// wraping at the edges
+
+		auto pos = sprite.getPosition();
+
+		// left and right edges
+
+		if (pos.x < -SPACESHIP_HALF_SIZE)
+		{
+			pos.x = VIRTUAL_WIDTH + SPACESHIP_HALF_SIZE;
+		}
+		else if (pos.x > VIRTUAL_WIDTH + SPACESHIP_HALF_SIZE)
+		{
+			pos.x = -SPACESHIP_HALF_SIZE;
+		}
+
+		// top and bottom edges
+
+		if (pos.y < -SPACESHIP_HALF_SIZE)
+		{
+			pos.y = VIRTUAL_HEIGHT + SPACESHIP_HALF_SIZE;
+		}
+		else if (pos.y > VIRTUAL_HEIGHT + SPACESHIP_HALF_SIZE)
+		{
+			pos.y = -SPACESHIP_HALF_SIZE;
+		}
+
+		if (pos != sprite.getPosition())
+		{
+			sprite.setPosition(pos);
+		}
+	}
+
+	void render()
+	{
+		bb::WINDOW.draw(sprite);
+
+		bb::WINDOW.draw(thrust);
+
+		bb::WINDOW.draw(reverse_thrust);
+	}
+
 } space_ship;

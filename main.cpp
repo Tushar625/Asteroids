@@ -9,9 +9,7 @@ unsigned int bb::set_antialiashing()
 	return 0;
 }
 
-sf::Vector2f velocity = { 0, 0 }, accn;
 
-float ACCN = 100, daccn = 500;
 
 inline bool bb::Game::Create()
 {
@@ -37,32 +35,6 @@ inline bool bb::Game::Create()
 
 	// extra
 
-	/*auto pt = space_ship.getPosition();
-
-	std::cout << pt.x << ", " << pt.y << "\n\n";
-
-	auto dir = space_ship.getRotation();
-
-	std::cout << dir;*/
-
-	space_ship.setOrigin(sf::Vector2f(10, 10));
-
-	space_ship.setPosition(sf::Vector2f(100, 100));
-
-	
-	rocket_exhaust.setGap(5);
-
-	rocket_exhaust.setMaxVelocity(300);
-
-	rocket_exhaust.setAngle(15);
-
-
-	reverse_thrust.setGap(5);
-
-	reverse_thrust.setMaxVelocity(300);
-
-	reverse_thrust.setAngle(15);
-
 	return SUCCESS;
 }
 
@@ -77,86 +49,7 @@ inline bool bb::Game::Update(double dt)
 
 	// ~~~~ [write your statements here] ~~~~
 
-	if (bb::INPUT.isHeld(sf::Keyboard::Scan::Left))
-	{
-		space_ship.rotate(-200 * dt);
-	}
-
-	if (bb::INPUT.isHeld(sf::Keyboard::Scan::Right))
-	{
-		space_ship.rotate(200 * dt);
-
-		//accn = { cos(space_ship.getRotation()) * ACCN, sin(space_ship.getRotation()) * ACCN };
-	}
-
-	accn = { cos(std::numbers::pi_v<float> / 180 * space_ship.getRotation()) * ACCN, sin(std::numbers::pi_v<float> / 180 * space_ship.getRotation()) * ACCN };
-
-	rocket_exhaust.setSource(space_ship.getPosition());
-
-	if (bb::INPUT.isHeld(sf::Keyboard::Scan::Up))
-	{
-		rocket_exhaust.setDirection(space_ship.getRotation() + 180);
-
-		rocket_exhaust.spray();
-
-		// propulsion
-
-		velocity.x += accn.x * dt;
-
-		velocity.y += accn.y * dt;
-	}
-
-	reverse_thrust.setSource(space_ship.getPosition());
-
-	if (bb::INPUT.isHeld(sf::Keyboard::Scan::Down))
-	{
-		reverse_thrust.setDirection(space_ship.getRotation() + 45);
-
-		reverse_thrust.spray();
-
-		reverse_thrust.setDirection(space_ship.getRotation() - 45);
-
-		reverse_thrust.spray();
-
-		// propulsion
-
-		velocity.x -= accn.x * dt;
-
-		velocity.y -= accn.y * dt;
-	}
-
-	space_ship.move(sf::Vector2f(velocity.x * dt, velocity.y * dt));
-
-	rocket_exhaust.update(dt);
-
-	reverse_thrust.update(dt);
-
-	// wraping
-
-	auto pos = space_ship.getPosition();
-
-	if (pos.x < -10)
-	{
-		pos.x = VIRTUAL_WIDTH + 10;
-	}
-	else if (pos.x > VIRTUAL_WIDTH + 10)
-	{
-		pos.x = -10;
-	}
-
-	if (pos.y < -10)
-	{
-		pos.y = VIRTUAL_HEIGHT + 10;
-	}
-	else if (pos.y > VIRTUAL_HEIGHT + 10)
-	{
-		pos.y = -10;
-	}
-
-	if(pos != space_ship.getPosition())
-	{
-		space_ship.setPosition(pos);
-	}
+	space_ship.update(dt);
 
 	return !STOP_GAME_LOOP;
 }
@@ -169,9 +62,5 @@ inline void bb::Game::Render()
 
 	bb::WINDOW.draw(small_text);
 
-	bb::WINDOW.draw(space_ship);
-
-	bb::WINDOW.draw(rocket_exhaust);
-
-	bb::WINDOW.draw(reverse_thrust);
+	space_ship.render();
 }
