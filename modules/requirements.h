@@ -12,6 +12,8 @@
 
 #include<numbers>
 
+#include <random>
+
 #include<concepts>
 
 #include"Constants.h"
@@ -21,3 +23,5 @@
 #include"vector_sprite.h"
 
 #include"space_ship.h"
+
+#include"asteroid.h"

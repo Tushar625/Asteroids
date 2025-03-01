@@ -12,6 +12,8 @@ class ASSET_LOADER
 	
 	ASSET_LOADER()
 	{
+		srand(time(0));
+
 		if (!font.loadFromFile("font/font.ttf"))
 		{
 			std::cout << "Failed to load font :(\n\n";
