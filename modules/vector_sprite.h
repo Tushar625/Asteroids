@@ -10,7 +10,7 @@ class vector_sprite_class : public sf::Drawable, public sf::Transformable
 
 		states.texture = NULL;
 
-		target.draw(&point[0], 5, sf::LineStrip, states);
+		target.draw(&point[0], point.size(), sf::LineStrip, states);
 	}
 
 public:
