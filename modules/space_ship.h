@@ -18,15 +18,14 @@ class space_ship_class
 
 	space_ship_class() : velocity{ 0, 0 }, accn{ SPACESHIP_ACCN, 0 }
 	{
-		sprite.set_local_points(
+		sprite.set_local_size_and_points(
+			SPACESHIP_SIZE,
 			sf::Vector2f{ SPACESHIP_SIZE, SPACESHIP_HALF_SIZE },
 			sf::Vector2f{ 0, 0 },
 			sf::Vector2f{ SPACESHIP_SIZE / 4, SPACESHIP_HALF_SIZE },
 			sf::Vector2f{ 0, SPACESHIP_SIZE },
 			sf::Vector2f{ SPACESHIP_SIZE, SPACESHIP_HALF_SIZE }
 		);
-
-		sprite.setOrigin(sf::Vector2f(SPACESHIP_HALF_SIZE, SPACESHIP_HALF_SIZE));
 
 		sprite.setPosition(sf::Vector2f(100, 100));
 
@@ -111,7 +110,7 @@ class space_ship_class
 
 		// updating position of spaceship according to it's velocity
 
-		sprite.move(sf::Vector2f(velocity.x * dt, velocity.y * dt));
+		sprite.move_wrap(sf::Vector2f(velocity.x * dt, velocity.y * dt));
 
 		// updating exhaust gases
 
@@ -121,7 +120,7 @@ class space_ship_class
 
 		// wraping at the edges
 
-		auto pos = sprite.getPosition();
+		/*auto pos = sprite.getPosition();
 
 		// left and right edges
 
@@ -148,7 +147,7 @@ class space_ship_class
 		if (pos != sprite.getPosition())
 		{
 			sprite.setPosition(pos);
-		}
+		}*/
 	}
 
 	void render()

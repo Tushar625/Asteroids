@@ -34,13 +34,16 @@ inline bool bb::Game::Create()
 
 	// extra
 
-	bullet.set_local_points(
+	bullet.set_local_size_and_points(
+		2,
 		sf::Vector2f(1, 0),
 		sf::Vector2f(2, 1),
 		sf::Vector2f(1, 2),
 		sf::Vector2f(0, 1),
 		sf::Vector2f(1, 0)
 	);
+
+	bullet.setOrigin(sf::Vector2f(1, 1));
 
 	bullet.setPosition(200, 200);
 
