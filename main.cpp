@@ -10,7 +10,6 @@ unsigned int bb::set_antialiashing()
 }
 
 
-vector_sprite_class bullet;
 
 inline bool bb::Game::Create()
 {
@@ -34,19 +33,6 @@ inline bool bb::Game::Create()
 
 	// extra
 
-	bullet.set_local_size_and_points(
-		2,
-		sf::Vector2f(1, 0),
-		sf::Vector2f(2, 1),
-		sf::Vector2f(1, 2),
-		sf::Vector2f(0, 1),
-		sf::Vector2f(1, 0)
-	);
-
-	bullet.setOrigin(sf::Vector2f(1, 1));
-
-	bullet.setPosition(200, 200);
-
 	return SUCCESS;
 }
 
@@ -65,6 +51,8 @@ inline bool bb::Game::Update(double dt)
 
 	space_ship.update(dt);
 
+	bullet.update(dt);
+
 	return !STOP_GAME_LOOP;
 }
 
@@ -80,5 +68,5 @@ inline void bb::Game::Render()
 
 	asteroid.render();
 
-	bb::WINDOW.draw(bullet);
+	bullet.render();
 }

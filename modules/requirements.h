@@ -25,3 +25,5 @@
 #include"space_ship.h"
 
 #include"asteroid.h"
+
+#include"bullet.h"

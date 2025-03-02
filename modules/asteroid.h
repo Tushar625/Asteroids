@@ -17,7 +17,7 @@ class asteroid_class
 	{
 		// setting type of asteroid
 
-		type4();
+		type1();
 		
 		// setting random location
 

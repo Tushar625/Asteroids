@@ -8,13 +8,13 @@
 
 class space_ship_class
 {
-	vector_sprite_class sprite;
-
 	bb::Exhaust thrust, reverse_thrust;
 
 	sf::Vector2f velocity, accn;
 
 	public:
+
+	vector_sprite_class sprite;
 
 	space_ship_class() : velocity{ 0, 0 }, accn{ SPACESHIP_ACCN, 0 }
 	{
@@ -117,37 +117,6 @@ class space_ship_class
 		thrust.update(dt);
 
 		reverse_thrust.update(dt);
-
-		// wraping at the edges
-
-		/*auto pos = sprite.getPosition();
-
-		// left and right edges
-
-		if (pos.x < -SPACESHIP_HALF_SIZE)
-		{
-			pos.x = VIRTUAL_WIDTH + SPACESHIP_HALF_SIZE;
-		}
-		else if (pos.x > VIRTUAL_WIDTH + SPACESHIP_HALF_SIZE)
-		{
-			pos.x = -SPACESHIP_HALF_SIZE;
-		}
-
-		// top and bottom edges
-
-		if (pos.y < -SPACESHIP_HALF_SIZE)
-		{
-			pos.y = VIRTUAL_HEIGHT + SPACESHIP_HALF_SIZE;
-		}
-		else if (pos.y > VIRTUAL_HEIGHT + SPACESHIP_HALF_SIZE)
-		{
-			pos.y = -SPACESHIP_HALF_SIZE;
-		}
-
-		if (pos != sprite.getPosition())
-		{
-			sprite.setPosition(pos);
-		}*/
 	}
 
 	void render()
