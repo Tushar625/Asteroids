@@ -33,6 +33,13 @@ inline bool bb::Game::Create()
 
 	// extra
 
+	space_ship::create();
+
+	for(int i = 1; i <= 5; i++)
+	{
+		asteroid::create();
+	}
+
 	return SUCCESS;
 }
 
@@ -47,11 +54,43 @@ inline bool bb::Game::Update(double dt)
 
 	// ~~~~ [write your statements here] ~~~~
 
-	asteroid.update(dt);
+	for (size_t i = 0; i < ecs.entity_count();)
+	{
+		auto& entity = ecs.entity(i);
 
-	space_ship.update(dt);
+		switch (entity.get<ENTITY_TYPE>())
+		{
+			case SPACESHIP_ENTITY:
 
-	bullet.update(dt);
+				space_ship::update(entity, dt);
+
+				if (bb::INPUT.isPressed(sf::Keyboard::Scan::Enter))
+				{
+					// create bullet
+
+					bullet::create(entity.get<SPRITE>());
+				}
+
+				break;
+
+			case ASTEROID_ENTITY:
+
+				asteroid::update(entity, dt); break;
+
+			case BULLET_ENTITY:
+
+				if (bullet::update(entity, dt))
+				{
+					continue;
+				}
+
+				break;
+		}
+
+		i++;
+	}
+
+	//bullet.update(dt);
 
 	return !STOP_GAME_LOOP;
 }
@@ -64,9 +103,25 @@ inline void bb::Game::Render()
 
 	bb::WINDOW.draw(small_text);
 
-	space_ship.render();
+	for (size_t i = 0; i < ecs.entity_count(); i++)
+	{
+		auto& entity = ecs.entity(i);
 
-	asteroid.render();
+		switch (entity.get<ENTITY_TYPE>())
+		{
+			case SPACESHIP_ENTITY:
 
-	bullet.render();
+				space_ship::render(entity); break;
+
+			case ASTEROID_ENTITY:
+
+				asteroid::render(entity); break;
+
+			case BULLET_ENTITY:
+
+				bullet::render(entity); break;
+		}
+	}
+
+	//bullet.render();
 }

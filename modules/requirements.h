@@ -18,9 +18,9 @@
 
 #include"Constants.h"
 
-#include"assets.h"
-
 #include"vector_sprite.h"
+
+#include"assets.h"
 
 #include"space_ship.h"
 

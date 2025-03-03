@@ -13,7 +13,7 @@ class vector_sprite_class : public sf::Drawable, public sf::Transformable
 		half_size = sz / 2;
 	}
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
 		states.transform *= getTransform();
 

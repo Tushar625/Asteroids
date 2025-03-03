@@ -2,20 +2,41 @@
 
 
 
-class asteroid_class
+namespace asteroid
 {
-	vector_sprite_class sprite;
+	void type1(vector_sprite_class& sprite);
 
-	sf::Vector2f velocity;
-
-	public:
-
-	asteroid_class()
+	void type2(vector_sprite_class& sprite);
+		
+	void type3(vector_sprite_class& sprite);
+		
+	void type4(vector_sprite_class& sprite);
+	
+	
+		
+	void create()
 	{
+		auto astro = ecs.create_entity();
+
+		astro.get<ENTITY_TYPE>() = ASTEROID_ENTITY;
+
+		auto& sprite = astro.get<SPRITE>();
+
+		auto& velocity = astro.get<VELOCITY>();
+
 		// setting type of asteroid
 
-		type1();
-		
+		switch (rand() % 4)
+		{
+			case 0: type1(sprite); break;
+
+			case 1: type2(sprite); break;
+
+			case 2: type3(sprite); break;
+
+			case 3: type4(sprite); break;
+		}
+
 		// setting random location
 
 		sprite.setPosition(sf::Vector2f(rand() % VIRTUAL_WIDTH, rand() % VIRTUAL_HEIGHT));
@@ -27,7 +48,7 @@ class asteroid_class
 		float angle = (rand() % 360) * std::numbers::pi_v<float> / 180;	// 0 -> 359 degrees but in radians
 
 		velocity.x = cos(angle) * velo;
-		
+
 		velocity.y = sin(angle) * velo;
 
 		// setting random scale
@@ -35,8 +56,14 @@ class asteroid_class
 		sprite.set_scale((rand() % 2001 + 1000) / 1000.0f);
 	}
 
-	void update(double dt)
+
+
+	void update(ECS_TYPE::ENTITY& astro, double dt)
 	{
+		auto& sprite = astro.get<SPRITE>();
+
+		auto& velocity = astro.get<VELOCITY>();
+
 		// updating position of asteroid according to it's velocity
 
 		sprite.move_wrap(sf::Vector2f(velocity.x * dt, velocity.y * dt));
@@ -44,14 +71,18 @@ class asteroid_class
 		sprite.rotate(ASTEROID_ROTATION_SPEED * dt);
 	}
 
-	void render()
+
+
+	void render(ECS_TYPE::ENTITY& astro)
 	{
+		auto& sprite = astro.get<SPRITE>();
+
 		bb::WINDOW.draw(sprite);
 	}
 
-	private:
 
-	void type1()
+
+	void type1(vector_sprite_class& sprite)
 	{
 		sprite.set_local_size_and_points(
 			ASTEROID_SIZE,
@@ -76,7 +107,7 @@ class asteroid_class
 		);
 	}
 
-	void type2()
+	void type2(vector_sprite_class& sprite)
 	{
 		sprite.set_local_size_and_points(
 			ASTEROID_SIZE,
@@ -99,7 +130,7 @@ class asteroid_class
 		);
 	}
 
-	void type3()
+	void type3(vector_sprite_class& sprite)
 	{
 		sprite.set_local_size_and_points(
 			ASTEROID_SIZE,
@@ -124,7 +155,7 @@ class asteroid_class
 		);
 	}
 
-	void type4()
+	void type4(vector_sprite_class& sprite)
 	{
 		sprite.set_local_size_and_points(
 			ASTEROID_SIZE,
@@ -147,4 +178,4 @@ class asteroid_class
 			sf::Vector2f(3, 3)
 		);
 	}
-} asteroid;
+}
