@@ -1,9 +1,6 @@
 #pragma once
 
-#define BULLET_SIZE 2
-#define BULLET_HALF_SIZE 1
-#define BULLET_VELOCITY 500
-#define BULLET_LIFE_TIME .5f
+
 
 class bullet_class
 {

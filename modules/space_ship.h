@@ -1,10 +1,5 @@
 #pragma once
 
-#define SPACESHIP_ACCN 100.0f
-#define SPACESHIP_ROTATION_SPEED 200.0f
-#define	SPACESHIP_SIZE 20
-#define	SPACESHIP_HALF_SIZE 10
-
 
 class space_ship_class
 {

@@ -1,9 +1,6 @@
 #pragma once
 
-#define ASTEROID_MIN_VELOCITY 50
-#define ASTEROID_MAX_VELOCITY 100
-#define ASTEROID_ROTATION_SPEED 20.0f
-#define ASTEROID_SIZE 20
+
 
 class asteroid_class
 {
