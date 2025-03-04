@@ -51,6 +51,11 @@ public:
 		return getTransform().transformPoint(point[i].position);
 	}
 
+	size_t get_point_count() const
+	{
+		return point.size();
+	}
+
 	float get_size()
 	{
 		return size;

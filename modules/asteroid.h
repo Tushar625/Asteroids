@@ -45,7 +45,7 @@ namespace asteroid
 
 		int velo = rand() % (ASTEROID_MAX_VELOCITY - ASTEROID_MIN_VELOCITY + 1) + ASTEROID_MIN_VELOCITY;
 
-		float angle = (rand() % 360) * std::numbers::pi_v<float> / 180;	// 0 -> 359 degrees but in radians
+		float angle = (rand() % 361) * std::numbers::pi_v<float> / 180;	// 0 -> 360 degrees but in radians
 
 		velocity.x = cos(angle) * velo;
 
@@ -54,6 +54,48 @@ namespace asteroid
 		// setting random scale
 
 		sprite.set_scale((rand() % 2001 + 1000) / 1000.0f);
+	}
+
+
+
+	void destroy(ECS_TYPE::ENTITY& entity)
+	{
+		auto& sprite = entity.get<SPRITE>();
+
+		auto pos = sprite.getPosition();
+
+		auto scale = sprite.get_scale();
+
+		ecs.kill_entity(entity);
+
+		if(scale < .8)
+		{
+			return;
+		}
+
+		create();
+
+		create();
+
+		auto id = ecs.entity_count() - 1;
+
+		ecs.entity(id).get<SPRITE>().setPosition(pos);
+
+		ecs.entity(id - 1).get<SPRITE>().setPosition(pos);
+
+
+		ecs.entity(id).get<SPRITE>().set_scale(scale / 2);
+
+		ecs.entity(id - 1).get<SPRITE>().set_scale(scale / 2);
+
+
+		ecs.entity(id).get<VELOCITY>().x *= 1.5;
+
+		ecs.entity(id).get<VELOCITY>().y *= 1.5;
+
+		ecs.entity(id - 1).get<VELOCITY>().x *= 1.5;
+
+		ecs.entity(id - 1).get<VELOCITY>().y *= 1.5;
 	}
 
 

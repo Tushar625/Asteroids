@@ -68,7 +68,7 @@ inline bool bb::Game::Update(double dt)
 
 				space_ship::input_processing(sprite, velocity, dt);
 
-				if (bb::INPUT.isPressed(sf::Keyboard::Scan::Enter))
+				if (bb::INPUT.isPressed(sf::Keyboard::Scan::Space))
 				{
 					// create bullet
 
@@ -88,6 +88,13 @@ inline bool bb::Game::Update(double dt)
 				if (!bullet::is_alive(dt))
 				{
 					ecs.kill_entity(entity);
+
+					continue;
+				}
+
+				if (bullet::asteroid_collision(sprite.getPosition()))
+				{
+					bullet::life_time = 0;
 
 					continue;
 				}
