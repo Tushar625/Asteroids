@@ -128,8 +128,6 @@
 
 namespace space_ship
 {
-	bb::Exhaust thrust, reverse_thrust;
-
 	sf::Vector2f accn{ SPACESHIP_ACCN, 0 };
 
 
@@ -152,30 +150,12 @@ namespace space_ship
 		);
 
 		sprite.setPosition(sf::Vector2f(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT / 2.0f));
-
-
-		thrust.setGap(5);
-
-		thrust.setMaxVelocity(300);
-
-		thrust.setAngle(15);
-
-
-		reverse_thrust.setGap(5);
-
-		reverse_thrust.setMaxVelocity(300);
-
-		reverse_thrust.setAngle(15);
 	}
 
 
 
-	void update(ECS_TYPE::ENTITY& rocket, double dt)
+	void input_processing(vector_sprite_class& sprite, sf::Vector2f& velocity, double dt)
 	{
-		auto& sprite = rocket.get<SPRITE>();
-
-		auto& velocity = rocket.get<VELOCITY>();
-
 		if (bb::INPUT.isHeld(sf::Keyboard::Scan::Left))
 		{
 			sprite.rotate(-SPACESHIP_ROTATION_SPEED * dt);
@@ -237,28 +217,5 @@ namespace space_ship
 
 			velocity.y -= accn.y * dt;
 		}
-
-		// updating position of spaceship according to it's velocity
-
-		sprite.move_wrap(sf::Vector2f(velocity.x * dt, velocity.y * dt));
-
-		// updating exhaust gases
-
-		thrust.update(dt);
-
-		reverse_thrust.update(dt);
-	}
-
-
-
-	void render(ECS_TYPE::ENTITY& rocket)
-	{
-		auto& sprite = rocket.get<SPRITE>();
-
-		bb::WINDOW.draw(sprite);
-
-		bb::WINDOW.draw(thrust);
-
-		bb::WINDOW.draw(reverse_thrust);
 	}
 }

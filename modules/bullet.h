@@ -6,7 +6,7 @@ namespace bullet
 {
 	float life_time = -1;
 
-	void create(const vector_sprite_class& space_ship_sprite)
+	void create(const vector_sprite_class& space_ship_sprite, const sf::Vector2f& space_ship_velocity)
 	{
 		auto ball = ecs.create_entity();
 
@@ -25,13 +25,15 @@ namespace bullet
 			sf::Vector2f(BULLET_HALF_SIZE, 0)
 		);
 
-		// calculating speed
+		// calculating bullet velocity
 
 		float angle = space_ship_sprite.getRotation() * std::numbers::pi_v<float> / 180;	// 0 -> 359 degrees but in radians
 
 		velocity.x = cos(angle) * BULLET_VELOCITY;
 
 		velocity.y = sin(angle) * BULLET_VELOCITY;
+
+		velocity += space_ship_velocity;	// adding spaceship velocity to bullet velocity
 
 		// set rotation and position
 
@@ -44,30 +46,10 @@ namespace bullet
 		life_time = BULLET_LIFE_TIME;
 	}
 
-	bool update(ECS_TYPE::ENTITY& ball, double dt)
+	bool is_alive(double dt)
 	{
-		auto& sprite = ball.get<SPRITE>();
-
-		auto& velocity = ball.get<VELOCITY>();
-
 		life_time -= dt;
 
-		if (life_time < 0)
-		{
-			ecs.kill_entity(ball);
-
-			return true;
-		}
-
-		sprite.move_wrap(sf::Vector2f(velocity.x * dt, velocity.y * dt));
-
-		return false;
-	}
-
-	void render(ECS_TYPE::ENTITY& ball)
-	{
-		auto& sprite = ball.get<SPRITE>();
-
-		bb::WINDOW.draw(sprite);
+		return life_time > 0;
 	}
 }

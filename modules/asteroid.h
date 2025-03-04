@@ -58,30 +58,6 @@ namespace asteroid
 
 
 
-	void update(ECS_TYPE::ENTITY& astro, double dt)
-	{
-		auto& sprite = astro.get<SPRITE>();
-
-		auto& velocity = astro.get<VELOCITY>();
-
-		// updating position of asteroid according to it's velocity
-
-		sprite.move_wrap(sf::Vector2f(velocity.x * dt, velocity.y * dt));
-
-		sprite.rotate(ASTEROID_ROTATION_SPEED * dt);
-	}
-
-
-
-	void render(ECS_TYPE::ENTITY& astro)
-	{
-		auto& sprite = astro.get<SPRITE>();
-
-		bb::WINDOW.draw(sprite);
-	}
-
-
-
 	void type1(vector_sprite_class& sprite)
 	{
 		sprite.set_local_size_and_points(

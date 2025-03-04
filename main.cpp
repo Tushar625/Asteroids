@@ -58,39 +58,55 @@ inline bool bb::Game::Update(double dt)
 	{
 		auto& entity = ecs.entity(i);
 
+		auto& sprite = entity.get<SPRITE>();
+
+		auto& velocity = entity.get<VELOCITY>();
+
 		switch (entity.get<ENTITY_TYPE>())
 		{
 			case SPACESHIP_ENTITY:
 
-				space_ship::update(entity, dt);
+				space_ship::input_processing(sprite, velocity, dt);
 
 				if (bb::INPUT.isPressed(sf::Keyboard::Scan::Enter))
 				{
 					// create bullet
 
-					bullet::create(entity.get<SPRITE>());
+					bullet::create(sprite, velocity);
 				}
 
 				break;
 
 			case ASTEROID_ENTITY:
 
-				asteroid::update(entity, dt); break;
+				sprite.rotate(ASTEROID_ROTATION_SPEED * dt);
+				
+				break;
 
 			case BULLET_ENTITY:
 
-				if (bullet::update(entity, dt))
+				if (!bullet::is_alive(dt))
 				{
+					ecs.kill_entity(entity);
+
 					continue;
 				}
 
 				break;
 		}
 
+		// common position update function
+
+		sprite.move_wrap(sf::Vector2f(velocity.x * dt, velocity.y * dt));
+
 		i++;
 	}
 
-	//bullet.update(dt);
+	// updating exhaust gases
+
+	thrust.update(dt);
+
+	reverse_thrust.update(dt);
 
 	return !STOP_GAME_LOOP;
 }
@@ -105,23 +121,10 @@ inline void bb::Game::Render()
 
 	for (size_t i = 0; i < ecs.entity_count(); i++)
 	{
-		auto& entity = ecs.entity(i);
-
-		switch (entity.get<ENTITY_TYPE>())
-		{
-			case SPACESHIP_ENTITY:
-
-				space_ship::render(entity); break;
-
-			case ASTEROID_ENTITY:
-
-				asteroid::render(entity); break;
-
-			case BULLET_ENTITY:
-
-				bullet::render(entity); break;
-		}
+		bb::WINDOW.draw(ecs.entity(i).get<SPRITE>());
 	}
 
-	//bullet.render();
+	bb::WINDOW.draw(thrust);
+
+	bb::WINDOW.draw(reverse_thrust);
 }
