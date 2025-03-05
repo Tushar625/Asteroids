@@ -73,29 +73,22 @@ namespace asteroid
 			return;
 		}
 
-		create();
+		int new_asteroid_count = rand() % 2 + 2;
 
-		create();
+		while (new_asteroid_count-- > 0)
+		{
+			create();
 
-		auto id = ecs.entity_count() - 1;
+			auto id = ecs.entity_count() - 1;
 
-		ecs.entity(id).get<SPRITE>().setPosition(pos);
+			ecs.entity(id).get<SPRITE>().setPosition(pos);
 
-		ecs.entity(id - 1).get<SPRITE>().setPosition(pos);
+			ecs.entity(id).get<SPRITE>().set_scale(scale * (rand() % 201 + 400) / 1000.0f);
 
+			ecs.entity(id).get<VELOCITY>().x *= (rand() % 801 + 1200) / 1000.0f;	// 1.2 - 2.0
 
-		ecs.entity(id).get<SPRITE>().set_scale(scale / 2);
-
-		ecs.entity(id - 1).get<SPRITE>().set_scale(scale / 2);
-
-
-		ecs.entity(id).get<VELOCITY>().x *= 1.5;
-
-		ecs.entity(id).get<VELOCITY>().y *= 1.5;
-
-		ecs.entity(id - 1).get<VELOCITY>().x *= 1.5;
-
-		ecs.entity(id - 1).get<VELOCITY>().y *= 1.5;
+			ecs.entity(id).get<VELOCITY>().y *= (rand() % 801 + 1200) / 1000.0f;	// 1.2 - 2.0
+		}
 	}
 
 
