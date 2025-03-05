@@ -4,6 +4,8 @@
 
 #include"BBS\asset\particle_system\exhaust.h"
 
+#include"BBS/asset/particle_system/space_explosion.h"
+
 #include<iostream>	// only for debugging
 
 #include<string>

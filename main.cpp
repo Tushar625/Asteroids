@@ -115,6 +115,8 @@ inline bool bb::Game::Update(double dt)
 
 	reverse_thrust.update(dt);
 
+	explosion.update(dt);
+
 	return !STOP_GAME_LOOP;
 }
 
@@ -134,4 +136,6 @@ inline void bb::Game::Render()
 	bb::WINDOW.draw(thrust);
 
 	bb::WINDOW.draw(reverse_thrust);
+
+	bb::WINDOW.draw(explosion);
 }

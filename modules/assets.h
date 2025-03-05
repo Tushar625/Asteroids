@@ -6,6 +6,8 @@ sf::Text small_text, medium_text, large_text;
 
 bb::Exhaust thrust, reverse_thrust;
 
+bb::SpaceExplosion explosion;
+
 using ECS_TYPE = bb::ECS<ECS_ENTITY_TYPE, vector_sprite_class, sf::Vector2f>::C8;
 
 ECS_TYPE ecs;

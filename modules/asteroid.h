@@ -62,13 +62,19 @@ namespace asteroid
 	{
 		auto& sprite = entity.get<SPRITE>();
 
+		auto& velocity = entity.get<VELOCITY>();
+
 		auto pos = sprite.getPosition();
 
 		auto scale = sprite.get_scale();
 
 		ecs.kill_entity(entity);
 
-		if(scale < .8)
+		// create an explosion effect in the place of destroyed asteroid
+
+		explosion.create(pos, velocity);
+
+		if(scale < .9)
 		{
 			return;
 		}
@@ -83,7 +89,7 @@ namespace asteroid
 
 			ecs.entity(id).get<SPRITE>().setPosition(pos);
 
-			ecs.entity(id).get<SPRITE>().set_scale(scale * (rand() % 201 + 400) / 1000.0f);
+			ecs.entity(id).get<SPRITE>().set_scale(scale * (rand() % 301 + 500) / 1000.0f);	// .5 - .8
 
 			ecs.entity(id).get<VELOCITY>().x *= (rand() % 801 + 1200) / 1000.0f;	// 1.2 - 2.0
 
