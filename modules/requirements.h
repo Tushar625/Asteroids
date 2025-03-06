@@ -16,8 +16,6 @@
 
 #include<numbers>
 
-#include <random>
-
 #include<concepts>
 
 #include"Constants.h"
@@ -31,3 +29,9 @@
 #include"asteroid.h"
 
 #include"bullet.h"
+
+#include"game_states/state_data.h"
+
+#include"game_states/initial_state.h"
+
+#include"game_states/game_state.h"

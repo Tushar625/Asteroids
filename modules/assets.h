@@ -12,6 +12,8 @@ using ECS_TYPE = bb::ECS<ECS_ENTITY_TYPE, vector_sprite_class, sf::Vector2f>::C8
 
 ECS_TYPE ecs;
 
+bb::STATE_MACHINE sm;
+
 
 
 class ASSET_LOADER

@@ -6,6 +6,8 @@ namespace bullet
 {
 	float life_time = -1;
 
+
+
 	void create(const vector_sprite_class& space_ship_sprite, const sf::Vector2f& space_ship_velocity)
 	{
 		auto ball = ecs.create_entity();
@@ -50,12 +52,16 @@ namespace bullet
 		life_time = BULLET_LIFE_TIME;
 	}
 
+
+
 	bool is_alive(double dt)
 	{
 		life_time -= dt;
 
 		return life_time > 0;
 	}
+
+
 
 	bool point_polygon_collision(const sf::Vector2f& point, const std::vector<sf::Vector2f>& polygon)
 	{
@@ -83,13 +89,15 @@ namespace bullet
 		return intersection_count % 2;	// odd == collision
 	}
 
+
+
 	bool asteroid_collision(const sf::Vector2f & bullet_position)
 	{
 		static std::vector<sf::Vector2f> polygon;
 
 		for (size_t i = 0; i < ecs.entity_count(); i++)
 		{
-			auto& entity = ecs.entity(i);
+			auto entity = ecs.entity(i);
 
 			if (entity.get<ENTITY_TYPE>() != ASTEROID_ENTITY)
 			{
