@@ -56,26 +56,26 @@ public:
 		return point.size();
 	}
 
-	float get_size()
+	float get_size() const
 	{
 		return size;
 	}
 
-	float get_half_size()
+	float get_half_size() const
 	{
 		return half_size;
 	}
 
 	void set_scale(float scl)
 	{
-		setScale(sf::Vector2f(scl, scl));
-
 		// update actual size
 
-		set_size(size * scl);
+		set_size(size / getScale().x * scl);
+		
+		setScale(sf::Vector2f(scl, scl));
 	}
 
-	float get_scale()
+	float get_scale() const
 	{
 		return getScale().x;
 	}

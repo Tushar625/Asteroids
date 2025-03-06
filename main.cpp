@@ -56,11 +56,15 @@ inline bool bb::Game::Update(double dt)
 
 	for (size_t i = 0; i < ecs.entity_count();)
 	{
-		auto& entity = ecs.entity(i);
+		auto entity = ecs.entity(i);
 
 		auto& sprite = entity.get<SPRITE>();
 
 		auto& velocity = entity.get<VELOCITY>();
+
+		// common position update function
+
+		sprite.move_wrap(sf::Vector2f(velocity.x * dt, velocity.y * dt));
 
 		switch (entity.get<ENTITY_TYPE>())
 		{
@@ -68,18 +72,39 @@ inline bool bb::Game::Update(double dt)
 
 				space_ship::input_processing(sprite, velocity, dt);
 
-				if (bb::INPUT.isPressed(sf::Keyboard::Scan::Space))
+				if (bb::INPUT.isPressed(sf::Keyboard::Scan::Enter) || bb::INPUT.isPressed(sf::Keyboard::Scan::Space))
 				{
 					// create bullet
 
 					bullet::create(sprite, velocity);
 				}
 
+				asteroid::spaceship_pos = sprite.getPosition();
+
 				break;
 
 			case ASTEROID_ENTITY:
 
 				sprite.rotate(ASTEROID_ROTATION_SPEED * dt);
+
+				if (asteroid::spaceship_collision(sprite))
+				{
+					//std::cout << "collision\n";
+
+					explosion.create(sprite.getPosition(), sf::Vector2f(velocity.x * 5, velocity.y * 5));
+
+					ecs.kill_entity(entity);
+
+					//std::cout << sprite.get_size() << "\n";
+
+					//std::cout << "i: " << i << "\n";
+
+					//std::cout << entity.get<ENTITY_TYPE>() << "\n";
+
+					//std::cout << sprite.getPosition().x << ", " << sprite.getPosition().y << "\n";
+
+					continue;
+				}
 				
 				break;
 
@@ -101,10 +126,6 @@ inline bool bb::Game::Update(double dt)
 
 				break;
 		}
-
-		// common position update function
-
-		sprite.move_wrap(sf::Vector2f(velocity.x * dt, velocity.y * dt));
 
 		i++;
 	}

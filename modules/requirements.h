@@ -1,10 +1,12 @@
 #pragma once
 
-#include"BBS\game.h"	// mention path to game.h
+#include"BBS/game.h"	// mention path to game.h
 
-#include"BBS\asset\particle_system\exhaust.h"
+#include"BBS/asset/particle_system/exhaust.h"
 
 #include"BBS/asset/particle_system/space_explosion.h"
+
+#include"BBS/utility/collision_fun.h"
 
 #include<iostream>	// only for debugging
 

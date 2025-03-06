@@ -4,6 +4,10 @@
 
 namespace asteroid
 {
+	sf::Vector2f spaceship_pos;
+
+
+
 	void type1(vector_sprite_class& sprite);
 
 	void type2(vector_sprite_class& sprite);
@@ -14,7 +18,7 @@ namespace asteroid
 	
 	
 		
-	void create()
+	ECS_TYPE::ENTITY create()
 	{
 		auto astro = ecs.create_entity();
 
@@ -37,9 +41,16 @@ namespace asteroid
 			case 3: type4(sprite); break;
 		}
 
-		// setting random location
+		// setting random location across the border
 
-		sprite.setPosition(sf::Vector2f(rand() % VIRTUAL_WIDTH, rand() % VIRTUAL_HEIGHT));
+		if (rand() % 2)
+		{
+			sprite.setPosition(sf::Vector2f(rand() % VIRTUAL_WIDTH, (rand() % 2) ? 0 : VIRTUAL_HEIGHT));
+		}
+		else
+		{
+			sprite.setPosition(sf::Vector2f((rand() % 2) ? 0 : VIRTUAL_WIDTH, rand() % VIRTUAL_HEIGHT));
+		}
 
 		// setting random velocity
 
@@ -54,6 +65,8 @@ namespace asteroid
 		// setting random scale
 
 		sprite.set_scale((rand() % 2001 + 1000) / 1000.0f);
+
+		return astro;
 	}
 
 
@@ -70,7 +83,16 @@ namespace asteroid
 
 		ecs.kill_entity(entity);
 
-		// create an explosion effect in the place of destroyed asteroid
+		// create an explosion effect in the place of destroyed asteroid using the bullet's velocity
+
+		/*
+			something unusual is going on here, the killed entity gets replaced by the
+			last entity in the ECS, which usually is the bullet that killed it, now
+			"velocity" was a reference to the asteroid's velocity but after "kill_entity"
+			call it starts to reference to the velocity of the bullet that hit it
+
+			same goes for the "sprite", so, don't use them after "kill_entity" call
+		*/
 
 		explosion.create(pos, velocity);
 
@@ -79,22 +101,41 @@ namespace asteroid
 			return;
 		}
 
-		int new_asteroid_count = rand() % 2 + 2;
+		int new_asteroid_count = rand() % 2 + 1;
 
 		while (new_asteroid_count-- > 0)
 		{
-			create();
+			auto&& entity = create();
 
-			auto id = ecs.entity_count() - 1;
+			entity.get<SPRITE>().setPosition(pos);
 
-			ecs.entity(id).get<SPRITE>().setPosition(pos);
+			entity.get<SPRITE>().set_scale(scale * ((rand() % 301 + 500) / 1000.0f));	// .5 - .8
 
-			ecs.entity(id).get<SPRITE>().set_scale(scale * (rand() % 301 + 500) / 1000.0f);	// .5 - .8
+			entity.get<VELOCITY>().x *= (rand() % 801 + 1200) / 1000.0f;	// 1.2 - 2.0
 
-			ecs.entity(id).get<VELOCITY>().x *= (rand() % 801 + 1200) / 1000.0f;	// 1.2 - 2.0
-
-			ecs.entity(id).get<VELOCITY>().y *= (rand() % 801 + 1200) / 1000.0f;	// 1.2 - 2.0
+			entity.get<VELOCITY>().y *= (rand() % 801 + 1200) / 1000.0f;	// 1.2 - 2.0
 		}
+	}
+
+
+
+	bool spaceship_collision(const vector_sprite_class& sprite)
+	{
+		/*
+			I noticed some unusual behaviour around here
+
+			my rocket was the first element in ecs so I accessed it as ecs.entity(0)
+
+			it had a peculier effect of setting the loop counter of update loop to 0
+
+			hence I abandon that idea and store the position of spaceship into a seperate variable
+		*/
+		
+		auto& asteroid_position = sprite.getPosition();
+
+		return bb::aabb_collision(spaceship_pos.x - SPACESHIP_HALF_SIZE, spaceship_pos.y - SPACESHIP_HALF_SIZE, SPACESHIP_SIZE, SPACESHIP_SIZE,
+			asteroid_position.x - sprite.get_half_size(), asteroid_position.y - sprite.get_half_size(), sprite.get_size(), sprite.get_size()
+		);
 	}
 
 
