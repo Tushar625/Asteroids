@@ -4,7 +4,7 @@
 
 namespace space_ship
 {
-	sf::Vector2f accn{ SPACESHIP_ACCN, 0 };
+	sf::Vector2f accn;
 
 
 
@@ -26,6 +26,10 @@ namespace space_ship
 		);
 
 		sprite.setPosition(sf::Vector2f(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT / 2.0f));
+
+		sprite.setRotation(-90);
+
+		accn = { 0, -SPACESHIP_ACCN };
 	}
 
 

@@ -18,7 +18,7 @@ namespace asteroid
 	
 	
 		
-	ECS_TYPE::ENTITY create()
+	ECS_TYPE::ENTITY create(ECS_TYPE &ecs)
 	{
 		auto astro = ecs.create_entity();
 
@@ -41,17 +41,6 @@ namespace asteroid
 			case 3: type4(sprite); break;
 		}
 
-		// setting random location across the border
-
-		if (rand() % 2)
-		{
-			sprite.setPosition(sf::Vector2f(rand() % VIRTUAL_WIDTH, (rand() % 2) ? 0 : VIRTUAL_HEIGHT));
-		}
-		else
-		{
-			sprite.setPosition(sf::Vector2f((rand() % 2) ? 0 : VIRTUAL_WIDTH, rand() % VIRTUAL_HEIGHT));
-		}
-
 		// setting random velocity
 
 		int velo = rand() % (ASTEROID_MAX_VELOCITY - ASTEROID_MIN_VELOCITY + 1) + ASTEROID_MIN_VELOCITY;
@@ -65,6 +54,17 @@ namespace asteroid
 		// setting random scale
 
 		sprite.set_scale((rand() % 2001 + 1000) / 1000.0f);
+
+		// setting random location across the border
+
+		if (rand() % 2)
+		{
+			sprite.setPosition(sf::Vector2f(rand() % VIRTUAL_WIDTH, (rand() % 2) ? (0 - sprite.get_half_size()) : (VIRTUAL_HEIGHT + sprite.get_half_size())));
+		}
+		else
+		{
+			sprite.setPosition(sf::Vector2f((rand() % 2) ? (0 - sprite.get_half_size()) : (VIRTUAL_WIDTH + sprite.get_half_size()), rand() % VIRTUAL_HEIGHT));
+		}
 
 		return astro;
 	}
@@ -105,7 +105,7 @@ namespace asteroid
 
 		while (new_asteroid_count-- > 0)
 		{
-			auto&& entity = create();
+			auto&& entity = create(ecs);
 
 			entity.get<SPRITE>().setPosition(pos);
 

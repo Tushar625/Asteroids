@@ -50,6 +50,8 @@ inline bool bb::Game::Update(double dt)
 	// ~~~~ [write your statements here] ~~~~
 
 	sm.Update(dt);
+
+	night_sky.update(dt);
 	
 	return !STOP_GAME_LOOP;
 }
@@ -58,9 +60,7 @@ inline bool bb::Game::Update(double dt)
 
 inline void bb::Game::Render()
 {
-	small_text.setString("Fps: " + std::to_string(bb::MY_GAME.get_fps()));
-
-	bb::WINDOW.draw(small_text);
+	bb::WINDOW.draw(night_sky);
 
 	sm.Render();
 }

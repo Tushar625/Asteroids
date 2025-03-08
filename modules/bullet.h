@@ -91,7 +91,7 @@ namespace bullet
 
 
 
-	bool asteroid_collision(const sf::Vector2f & bullet_position)
+	bool asteroid_collision(const sf::Vector2f & bullet_position, int &score)
 	{
 		static std::vector<sf::Vector2f> polygon;
 
@@ -122,6 +122,8 @@ namespace bullet
 			if (point_polygon_collision(bullet_position, polygon))
 			{
 				// collision detected
+
+				score += MAX_SCORE / sprite.get_scale();
 
 				asteroid::destroy(entity);
 

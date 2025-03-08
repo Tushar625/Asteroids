@@ -58,65 +58,45 @@ public:
 
 // to hold general game data that will be used by every state
 
-/*struct game_data_type
+struct game_data_type
 {
-	int level;
-
 	int highest_score;
 
-	int score_till_last_level;
+	int score;
 
 	int health;
 
-	// data of this structure is stored in AppData\Local\Breakout\data.bin
+	// data of this structure is stored in AppData\Local\Astroids_data.bin
 
-	game_data_type() : level(0), highest_score(0), score_till_last_level(0), health(MAX_HEALTH)
+	game_data_type() : highest_score(0), score(0), health(MAX_HEALTH)
 	{
-		bb::load_local_appdata("Breakout\\data.bin", *this);
+		//bb::load_local_appdata("Astroids_data.bin", *this);
 	}
 
 	~game_data_type()
 	{
-		bb::store_local_appdata("Breakout\\data.bin", *this);
+		//bb::store_local_appdata("Astroids_data.bin", *this);
 	}
 
 	// after game is over this functon is used to reset the general game data
 
-	void reset(int current_level_score)
+	void reset()
 	{
-		int total_score = score_till_last_level + current_level_score;
-
-		level = 0;
-
-		score_till_last_level = 0;
-
 		health = MAX_HEALTH;
 
-		if (total_score > highest_score)
+		if (score > highest_score)
 		{
 			// new highest score
 
-			sf::Sound sound;
+			/*sf::Sound sound;
 
 			sound.setBuffer(sound_buffer[HIGH_SCORE]);
 
-			sound.play();
+			sound.play();*/
 
-			highest_score = total_score;
+			highest_score = score;
 		}
+
+		score = 0;
 	}
-
-	// change the general game data to reach next level
-
-	void next_level(int current_level_score)
-	{
-		level += 1;
-
-		score_till_last_level += current_level_score;
-
-		if (health < MAX_HEALTH)
-		{
-			health += 1;
-		}
-	}
-};*/
+};

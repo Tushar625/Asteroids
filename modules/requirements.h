@@ -20,9 +20,13 @@
 
 #include"Constants.h"
 
+#include"night_sky.h"
+
 #include"vector_sprite.h"
 
 #include"assets.h"
+
+#include"health.h"
 
 #include"space_ship.h"
 
@@ -35,3 +39,5 @@
 #include"game_states/initial_state.h"
 
 #include"game_states/game_state.h"
+
+#include"game_states/game_over_state.h"
