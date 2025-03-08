@@ -21,11 +21,9 @@ class game_state : public bb::BASE_STATE
 
 	game_data_type *i_data;
 
-	sf::Text msg;
-
 public:
 
-	game_state() : pause(false), i_data(NULL), msg(medium_text)
+	game_state() : pause(false), i_data(NULL)
 	{}
 
 
@@ -125,13 +123,9 @@ private:
 
 							i_data->reset();
 
-							ecs.clear();
-
 							thrust.clear();
 
 							reverse_thrust.clear();
-
-							explosion.clear();
 
 							return;
 						}
@@ -187,11 +181,7 @@ private:
 
 	void Render()
 	{
-		medium_text.setString(std::to_string(static_cast<int>(bb::MY_GAME.get_fps() + .5)));
-
-		medium_text.setPosition(10, 10);
-
-		bb::WINDOW.draw(medium_text);
+		render_fps();
 
 		// draw the ecs
 
@@ -206,11 +196,7 @@ private:
 
 		bb::WINDOW.draw(explosion);
 
-		msg.setString(std::to_string(i_data->score));
-
-		msg.setPosition(sf::Vector2f(VIRTUAL_WIDTH - 12 - msg.getLocalBounds().width, 10));
-
-		bb::WINDOW.draw(msg);
+		render_score(i_data->score);
 
 		render_health(i_data->health);
 

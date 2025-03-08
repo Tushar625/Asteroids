@@ -39,6 +39,8 @@ public:
 		setOrigin(sf::Vector2f(sz / 2, sz / 2));
 
 		set_size(sz);
+
+		setScale(1, 1);
 	}
 
 	const sf::Vector2f& get_local_point(int i) const

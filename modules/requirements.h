@@ -18,6 +18,8 @@
 
 #include<concepts>
 
+#include<cmath>
+
 #include"Constants.h"
 
 #include"night_sky.h"
@@ -25,8 +27,6 @@
 #include"vector_sprite.h"
 
 #include"assets.h"
-
-#include"health.h"
 
 #include"space_ship.h"
 
@@ -36,8 +36,12 @@
 
 #include"game_states/state_data.h"
 
+#include"game_states/state_functions.h"
+
 #include"game_states/initial_state.h"
 
 #include"game_states/game_state.h"
 
 #include"game_states/game_over_state.h"
+
+#include"game_states/highest_score_state.h"

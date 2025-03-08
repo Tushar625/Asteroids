@@ -11,7 +11,7 @@ extern class game_state game;
 
 class initial_state : public bb::BASE_STATE
 {
-	sf::Text score_text, main_text, input_text;
+	sf::Text score_text, main_text_line1, main_text_line2, input_text;
 	
 	game_data_type i_data;
 
@@ -26,29 +26,35 @@ public:
 		score_text.setPosition(10, 10);
 
 
-
-		main_text = large_text;
+		main_text_line1 = large_text;
 		
-		main_text.setString("SPACE\nGAME");
+		main_text_line1.setString("SPACE");
 
-		main_text.setStyle(sf::Text::Bold | sf::Text::Italic);
+		main_text_line1.setStyle(sf::Text::Bold);
+		
+		center_origin(main_text_line1);
 
-		main_text.setOrigin(sf::Vector2f(main_text.getLocalBounds().width / 2.0f, LARGE_FONT_SIZE + 7.5));
+		main_text_line1.setPosition(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT / 2.0f - 37);
 
-		main_text.setPosition(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT / 2.0f);
 
-		main_text.setRotation(3.25);
+		main_text_line2 = large_text;
 
-		main_text.setScale(1, .75);
+		main_text_line2.setString("GAME");
+
+		main_text_line2.setStyle(sf::Text::Bold);
+
+		center_origin(main_text_line2);
+
+		main_text_line2.setPosition(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT / 2.0f + 37);
 
 
 		input_text = medium_text;
 
 		input_text.setString("--- Press 'Enter' to Start ---");
 
-		input_text.setOrigin(sf::Vector2f(input_text.getLocalBounds().width / 2.0f, MEDIUM_FONT_SIZE / 2.0f));
+		center_origin(input_text);
 
-		input_text.setPosition(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT - 30);
+		input_text.setPosition(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT - 20);
 	}
 
 private:
@@ -115,7 +121,9 @@ private:
 
 		bb::WINDOW.draw(score_text);
 
-		bb::WINDOW.draw(main_text);
+		bb::WINDOW.draw(main_text_line1);
+
+		bb::WINDOW.draw(main_text_line2);
 
 		bb::WINDOW.draw(input_text);
 	}

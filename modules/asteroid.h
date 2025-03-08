@@ -94,7 +94,7 @@ namespace asteroid
 			same goes for the "sprite", so, don't use them after "kill_entity" call
 		*/
 
-		explosion.create(pos, velocity);
+		explosion.create(pos, velocity, sf::Color::White, 1000 * scale);
 
 		if(scale < .9)
 		{

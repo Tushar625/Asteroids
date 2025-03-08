@@ -5,121 +5,58 @@
 
 
 
+extern class highest_score_state highest_score;
+
+
+
 class game_over_state : public bb::BASE_STATE
 {
 	public:
 
-	sf::Text main_message_text, score_text, complimentary_message_text, input_text;
+	sf::Text main_text_line1, main_text_line2, input_text;
 
-	void init(int score, int highest_score)
+	int score;
+
+	int _highest_score;
+
+	game_over_state()
 	{
-		// main text
+		main_text_line1 = large_text;
 
-		main_message_text = large_text;
+		main_text_line1.setString("GAME");
 
-		main_message_text.setString("GAME OVER");
+		main_text_line1.setStyle(sf::Text::Bold);
 
-		int xout, yout, boxh = VIRTUAL_HEIGHT / 1.7;
+		center_origin(main_text_line1);
 
-		/*
-			imagine a box placed in the center of the screen with height
-			boxh and width same as main message
+		main_text_line1.setPosition(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT / 2.0f - 37);
 
-			xout and yout represents the top left point this box
-		*/
 
-		bb::to_top_left(
-			xout, yout,
-			VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2,
-			boxh, (int)main_message_text.getLocalBounds().width,
-			bb::CENTER
-		);
+		main_text_line2 = large_text;
 
-		// place the main message in the box, touching its top border
+		main_text_line2.setString("OVER");
 
-		main_message_text.setPosition(sf::Vector2f(xout, yout));
+		main_text_line2.setStyle(sf::Text::Bold);
 
-		// score
+		center_origin(main_text_line2);
 
-		score_text = medium_text;
+		main_text_line2.setPosition(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT / 2.0f + 37);
 
-		score_text.setFillColor(sf::Color::White);
-
-		score_text.setString(std::to_string(score));
-
-		int tempx, tempy;
-
-		// place the center of score text 10 pixels up the center of the box
-
-		bb::to_top_left(
-			tempx, tempy,
-			VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2 - 10,
-			MEDIUM_FONT_SIZE, (int)score_text.getLocalBounds().width,
-			bb::CENTER
-		);
-
-		score_text.setPosition(sf::Vector2f(tempx, tempy));
-
-		// cmp text
-
-		complimentary_message_text = medium_text;
-
-		complimentary_message_text.setFillColor(sf::Color::White);
-
-		if(score > highest_score)
-		{
-			complimentary_message_text.setString("NEW HIGHEST SCORE");
-		}
-		else
-		{
-			complimentary_message_text.setString("HIGHEST SCORE: " + std::to_string(highest_score));
-		}
-
-		// place the center of comp message 10 pixels down the center of the box
-
-		bb::to_top_left(
-			tempx, tempy,
-			VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2 + 10,
-			MEDIUM_FONT_SIZE, (int)complimentary_message_text.getLocalBounds().width,
-			bb::CENTER
-		);
-
-		complimentary_message_text.setPosition(sf::Vector2f(tempx, tempy));
-
-		// input text
 
 		input_text = medium_text;
 
-		input_text.setString("Press 'Enter' to Return to Home");
+		input_text.setString("--- Press 'Enter' to Play Again ---");
 
-		bb::to_top_left(
-			xout, yout,
-			VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2 + boxh / 2,
-			MEDIUM_FONT_SIZE, (int)input_text.getLocalBounds().width,
-			bb::BOTTOM_CENTER
-		);
+		center_origin(input_text);
 
-		input_text.setPosition(sf::Vector2f(xout, yout));
+		input_text.setPosition(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT - 20);
+	}
 
-		/*
-											Screen Width
-			|----------------------------------------------------------------------| -
-																						|
-																						|
-								|=========MAIN MESSAGE=========|                     |
-								|                              |                     |
-								|                              |                     |
-								|                              |                     |
-								|          SCORE TEXT          |                     |
-								|                              |                     | Screen Height
-								|         COMP MESSAGE         |                     |
-								|                              |                     |
-								|                              |                     |
-					BUTTON1     |______________________________|     BUTTON2         |
-																						|
-																						|
-																						-
-		*/
+	void init(int score, int highest_score)
+	{
+		this->score = score;
+
+		this->_highest_score = highest_score;
 	}
 
 
@@ -131,7 +68,13 @@ class game_over_state : public bb::BASE_STATE
 
 	void Enter()
 	{
-		
+		auto entity = ecs.entity(0);
+
+		auto& sprite = entity.get<SPRITE>();
+
+		auto& velocity = entity.get<VELOCITY>();
+
+		explosion.create(sprite.getPosition(), velocity);
 	}
 
 
@@ -143,28 +86,69 @@ class game_over_state : public bb::BASE_STATE
 
 			//sound.play();
 
-			sm.change_to(initial);
+			if (_highest_score < score)
+			{
+				sm.change_to(highest_score, score);
+			}
+			else
+			{
+				sm.change_to(initial);
+			}
+
+			return;
 		}
+
+		for (size_t i = 0; i < ecs.entity_count(); i++)
+		{
+			auto entity = ecs.entity(i);
+
+			auto& sprite = entity.get<SPRITE>();
+
+			auto& velocity = entity.get<VELOCITY>();
+
+			if (entity.get<ENTITY_TYPE>() == ASTEROID_ENTITY)
+			{
+				sprite.rotate(ASTEROID_ROTATION_SPEED * dt);
+
+				sprite.move_wrap(sf::Vector2f(velocity.x * dt, velocity.y * dt));
+			}
+		}
+
+		explosion.update(dt);
 	}
 
 
 	void Render()
 	{
+		render_fps();
+
 		// render the buttons and the messages
 
-		bb::WINDOW.draw(main_message_text);
+		for (size_t i = 0; i < ecs.entity_count(); i++)
+		{
+			if(ecs.entity(i).get<ENTITY_TYPE>() == ASTEROID_ENTITY)
+			{
+				bb::WINDOW.draw(ecs.entity(i).get<SPRITE>());
+			}
+		}
 
-		bb::WINDOW.draw(score_text);
+		bb::WINDOW.draw(explosion);
 
-		bb::WINDOW.draw(complimentary_message_text);
+		bb::WINDOW.draw(main_text_line1);
+
+		bb::WINDOW.draw(main_text_line2);
 
 		bb::WINDOW.draw(input_text);
+
+		render_score(score);
 	}
 
 
 	void Exit()
 	{
-		
+		ecs.clear();
+
+		explosion.clear();
 	}
 
 }game_over;
