@@ -1,24 +1,55 @@
 #pragma once
 
-sf::Font Orbitron_font, ShareTechMono_font;
+/*
+	some assets to be used all over the game
+*/
+
+
+// text and fonts
+
+sf::Font lunchds, Delicatus;
 
 sf::Text small_text, medium_text, large_text;
 
-bb::Exhaust thrust, reverse_thrust;
 
-bb::SpaceExplosion explosion;
+// particle system effects
+
+bb::Exhaust thrust, reverse_thrust;	// spaceship exhaust
+
+bb::SpaceExplosion explosion;	// space explosion
+
+
+// heart sprites are used to display remaining lives
 
 vector_sprite_class heart_sprite;
 
+
+// night sky background for entire game
+
 night_sky_class night_sky;
+
+
+/*
+	primary ecs, that holds all the objects like, spaceship, asteroids and bullets
+	
+	vector_sprite_class keeps track of position, size and rotation of the objects
+*/
 
 using ECS_TYPE = bb::ECS<ECS_ENTITY_TYPE, vector_sprite_class, sf::Vector2f>::C8;
 
 ECS_TYPE ecs;
 
+
+// the state machine
+
 bb::STATE_MACHINE sm;
 
 
+/*
+	constructor of this class loads and initializes all the assets
+
+	this is also the first piece of code executed in this game
+*/
 
 class ASSET_LOADER
 {
@@ -28,25 +59,29 @@ class ASSET_LOADER
 	{
 		srand(time(0));
 
-		if (!Orbitron_font.loadFromFile("font/lunchds.ttf"))
+
+		
+		// setting fonts
+
+		if (!lunchds.loadFromFile("font/lunchds.ttf"))
 		{
-			std::cout << "Failed to load Orbitron_font :(\n\n";
+			std::cout << "Failed to load lunchds font :(\n\n";
 		}
 
-		if (!ShareTechMono_font.loadFromFile("font/Delicatus.ttf"))
+		if (!Delicatus.loadFromFile("font/Delicatus.ttf"))
 		{
-			std::cout << "Failed to load ShareTechMono_font :(\n\n";
+			std::cout << "Failed to load Delicatus font :(\n\n";
 		}
 
-		Orbitron_font.setSmooth(false);
+		lunchds.setSmooth(false);
 
-		ShareTechMono_font.setSmooth(false);
+		Delicatus.setSmooth(false);
 
-		small_text.setFont(ShareTechMono_font);
+		small_text.setFont(Delicatus);
 		
-		medium_text.setFont(ShareTechMono_font);
+		medium_text.setFont(Delicatus);
 		
-		large_text.setFont(Orbitron_font);
+		large_text.setFont(lunchds);
 
 		small_text.setCharacterSize(SMALL_FONT_SIZE);
 		
@@ -54,6 +89,9 @@ class ASSET_LOADER
 			
 		large_text.setCharacterSize(LARGE_FONT_SIZE);
 
+
+		
+		// setting thrust and reverse thrust
 
 		thrust.setGap(5);
 
@@ -68,6 +106,10 @@ class ASSET_LOADER
 
 		reverse_thrust.setAngle(15);
 
+
+
+		// creating the heart sprite, which is just a miniature space ship
+
 		float heart_size = SPACESHIP_SIZE / 2;
 
 		heart_sprite.set_local_size_and_points(
@@ -79,8 +121,8 @@ class ASSET_LOADER
 			sf::Vector2f{ heart_size, heart_size / 2 }
 		);
 
-		heart_sprite.setRotation(-90);
+		// make the spaceship point up
 
-		heart_sprite.setOrigin(0, 0);
+		heart_sprite.setRotation(-90);
 	}
 }asset_loader;

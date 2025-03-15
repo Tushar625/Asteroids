@@ -15,7 +15,7 @@ inline bool bb::Game::Create()
 {
 	// setting window title
 
-	bb::WINDOW.setTitle("Astroids");
+	bb::WINDOW.setTitle("Astroids (Clone) V0.0.0");
 
 	// setting window size and poxel size
 
@@ -31,7 +31,7 @@ inline bool bb::Game::Create()
 
 	bb::MY_GAME.set_fps(60);
 
-	// extra
+	// other initializations
 
 	sm.change_to(initial);
 
@@ -47,7 +47,7 @@ inline bool bb::Game::Update(double dt)
 	if (bb::INPUT.isClosed() || sm.null_state())
 		return STOP_GAME_LOOP;
 
-	// ~~~~ [write your statements here] ~~~~
+	// state machine and night sky background update
 
 	sm.Update(dt);
 
@@ -60,6 +60,8 @@ inline bool bb::Game::Update(double dt)
 
 inline void bb::Game::Render()
 {
+	// state machine and night sky background render
+
 	bb::WINDOW.draw(night_sky);
 
 	sm.Render();

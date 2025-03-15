@@ -1,9 +1,20 @@
 #pragma once
 
 
+/*
+	systems for bullet Entity in ECS
+*/
+
 
 namespace bullet
 {
+	/*
+		we are using single life_time variable to keep track of the lifetime
+		of all the bullets
+
+		it's not a good method but works quite well
+	*/
+
 	float life_time = -1;
 
 
@@ -18,6 +29,8 @@ namespace bullet
 
 		auto& velocity = ball.get<VELOCITY>();
 
+		// creating the bullet shape
+
 		sprite.set_local_size_and_points(
 			BULLET_SIZE,
 			sf::Vector2f(BULLET_HALF_SIZE, 0),
@@ -29,7 +42,7 @@ namespace bullet
 
 		// calculating bullet velocity
 
-		float angle = space_ship_sprite.getRotation() * std::numbers::pi_v<float> / 180;	// 0 -> 359 degrees but in radians
+		float angle = space_ship_sprite.getRotation() * std::numbers::pi_v<float> / 180;	// direction of spaceship in radians
 
 		velocity.x = cos(angle) * BULLET_VELOCITY;
 
@@ -37,13 +50,21 @@ namespace bullet
 
 		velocity += space_ship_velocity;	// adding spaceship velocity to bullet velocity
 
-		// setting scale
-
-		sprite.set_scale(1);
-		
 		// set rotation and position
 
 		sprite.setRotation(space_ship_sprite.getRotation());
+
+		/*
+			origin of the spaceship is at its center, and we set the source of the
+			bullet at that point,
+			
+			but the bullet must come out of the front of the spaceship.
+
+			actually the bullet moves so fast that player won't notice that it's coming
+			out of the center of the spaceship,
+			
+			we lazy programmers :)
+		*/
 
 		sprite.setPosition(space_ship_sprite.getPosition());
 
@@ -54,7 +75,12 @@ namespace bullet
 
 
 
-	bool is_alive(double dt)
+	/*
+		this function is supposed to be called from the update loop of ecs
+		so it also decreases the life time
+	*/
+	
+	bool is_alive(double dt = 0)
 	{
 		life_time -= dt;
 
@@ -63,35 +89,9 @@ namespace bullet
 
 
 
-	bool point_polygon_collision(const sf::Vector2f& point, const std::vector<sf::Vector2f>& polygon)
-	{
-		uint16_t intersection_count = 0;
-		
-		sf::Vector2f rey_end{ std::numeric_limits<float>::max(), point.y};
+	// check if a bullet (treated as a point) collids with any asteroid or not and also update the score
 
-		for (size_t i = 1; i < polygon.size(); i++)
-		{
-			const sf::Vector2f& p1 = polygon[i - 1];
-
-			const sf::Vector2f& p2 = polygon[i];
-
-			if ((p1.y <= point.y && point.y <= p2.y) || (p2.y <= point.y && point.y <= p1.y))
-			{
-				float intersect_x = ((p2.x - p1.x) / (p2.y - p1.y)) * (point.y - p1.y) + p1.x;
-
-				if (point.x <= intersect_x && intersect_x <= rey_end.x)
-				{
-					intersection_count++;
-				}
-			}
-		}
-
-		return intersection_count % 2;	// odd == collision
-	}
-
-
-
-	bool asteroid_collision(const sf::Vector2f & bullet_position, int &score)
+	bool asteroid_collision(const sf::Vector2f &bullet_position, int &score)
 	{
 		static std::vector<sf::Vector2f> polygon;
 
@@ -104,7 +104,11 @@ namespace bullet
 				continue;
 			}
 
+			// only asteroid entities are accepted
+
 			auto& sprite = entity.get<SPRITE>();
+
+			// creating the polygon vector representing the asteroid
 
 			polygon.clear();
 
@@ -112,22 +116,22 @@ namespace bullet
 
 			size_t j = 0;
 
-			// creating the polygon vector representing the asteroid
-
 			for (auto& p : polygon)
 			{
 				p = sprite.get_global_point(j++);
 			}
 
-			if (point_polygon_collision(bullet_position, polygon))
+			// checking for collision
+
+			if (bb::point_polygon_collision(bullet_position, polygon))
 			{
 				// collision detected
 
-				score += MAX_SCORE / sprite.get_scale();
+				score += MAX_SCORE / sprite.get_scale();	// update the score based on the scale of the polygon
 
-				asteroid::destroy(entity);
+				asteroid::destroy(entity);	// destroy the asteroid
 
-				return true;
+				return true;	// only one asteroid is destroyed
 			}
 		}
 

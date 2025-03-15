@@ -1,5 +1,5 @@
 
-// the initial state of this game home of the game
+// the initial state of this game or "home" of the game
 
 #pragma once
 
@@ -11,9 +11,15 @@ extern class game_state game;
 
 class initial_state : public bb::BASE_STATE
 {
+	// all the texts in the home screen
+
 	sf::Text score_text, main_text_line1, main_text_line2, input_text;
 	
+	// structure to store important game info score, health and highest score
+
 	game_data_type i_data;
+
+	// this ecs is only used to have some moving rocks in the background of home screen
 
 	ECS_TYPE bg_ecs;
 
@@ -21,6 +27,8 @@ public:
 
 	initial_state()
 	{
+		// score text displayes the highest score
+
 		score_text = medium_text;
 
 		score_text.setPosition(10, 10);
@@ -32,7 +40,7 @@ public:
 
 		main_text_line1.setStyle(sf::Text::Bold);
 		
-		center_origin(main_text_line1);
+		bb::setCenterOrigin(main_text_line1);
 
 		main_text_line1.setPosition(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT / 2.0f - 37);
 
@@ -43,7 +51,7 @@ public:
 
 		main_text_line2.setStyle(sf::Text::Bold);
 
-		center_origin(main_text_line2);
+		bb::setCenterOrigin(main_text_line2);
 
 		main_text_line2.setPosition(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT / 2.0f + 37);
 
@@ -52,7 +60,7 @@ public:
 
 		input_text.setString("--- Press 'Enter' to Start ---");
 
-		center_origin(input_text);
+		bb::setCenterOrigin(input_text);
 
 		input_text.setPosition(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT - 20);
 	}
@@ -61,16 +69,18 @@ private:
 
 	//sf::Sound sound;
 
-	//game_data_type i_data;	// created to hold general game data
-
 
 	void Enter()
 	{
+		// display the highest score
+
 		score_text.setString(std::to_string(i_data.highest_score));
 
 		//music.setLoop(true);
 
 		//music.play();
+
+		// creating some asteroids for background
 
 		bg_ecs.reserve_extra(7);
 
@@ -89,13 +99,17 @@ private:
 
 			//sound.play();
 
+			// send a pointer to i_data to game state
+
 			sm.change_to(game, &i_data);
 		}
 		
 		if (bb::INPUT.isPressed(sf::Keyboard::Scan::Escape))
 		{
-			sm.change_to(bb::NULL_STATE);
+			sm.change_to(bb::NULL_STATE);	// stop the game
 		}
+
+		// updating the ecs
 
 		for (size_t i = 0; i < bg_ecs.entity_count(); i++)
 		{
@@ -131,6 +145,8 @@ private:
 
 	void Exit()
 	{
+		// destroy background ecs
+
 		bg_ecs.clear();
 		//music.stop();
 	}

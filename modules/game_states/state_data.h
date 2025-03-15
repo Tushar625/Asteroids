@@ -2,60 +2,6 @@
 
 
 
-// creating the string buttons
-
-class str_button : public bb::BUTTON
-{
-	sf::Text button_text;
-
-	void ORDINARY_STATE() override
-	{
-		button_text.setPosition(sf::Vector2f(get_x(), get_y()));
-
-		/*
-			by default ordinary button color is white, "button_color"
-			is kept to chenge it if needed, here it is used primarily
-			by the menu list pointer to indicate which button is selected
-		*/
-
-		button_text.setFillColor(button_color);
-
-		bb::WINDOW.draw(button_text);
-
-		button_color = sf::Color::White;
-	}
-
-	void HOVERING_STATE() override
-	{
-		button_text.setPosition(sf::Vector2f(get_x(), get_y()));
-
-		button_text.setFillColor(sf::Color::Cyan);
-
-		bb::WINDOW.draw(button_text);
-	}
-
-public:
-
-	sf::Color button_color;
-
-	str_button(int xin, int yin, std::string button_str, bb::COORD_POSITION pos = bb::TOP_LEFT)
-	{
-		button_text = medium_text;	// button text will have same eproperties as medium text
-
-		button_text.setString(button_str);
-
-		set_height(MEDIUM_FONT_SIZE);
-
-		set_width(button_text.getLocalBounds().width);
-
-		set_pos(xin, yin, pos);
-
-		button_color = sf::Color::White;	// default ordinary state color is white
-	}
-};
-
-
-
 // to hold general game data that will be used by every state
 
 struct game_data_type

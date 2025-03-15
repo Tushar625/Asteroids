@@ -5,6 +5,7 @@
 #define STAR_MIN_VELOCITY 2
 #define STAR_MAX_VELOCITY 5
 
+
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 
@@ -18,7 +19,12 @@
 #define LARGE_FONT_SIZE 64
 
 
-#define SPACESHIP_ACCN 100.0f
+/*
+	All the sprites are considered square, so their length = breadth = size
+*/
+
+
+#define SPACESHIP_ACCN 100.0f	// when thrust is applied
 #define SPACESHIP_ROTATION_SPEED 200.0f
 #define	SPACESHIP_SIZE 20
 #define	SPACESHIP_HALF_SIZE 10
@@ -37,7 +43,8 @@
 
 
 #define MAX_HEALTH 3
-#define MAX_SCORE 20
+#define MAX_SCORE 20	// score = MAX_SCORE / scale of asteroid sprite
+
 
 
 enum ECS_ENTITY_TYPE { SPACESHIP_ENTITY, ASTEROID_ENTITY, BULLET_ENTITY };

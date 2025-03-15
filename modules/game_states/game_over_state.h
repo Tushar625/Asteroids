@@ -1,5 +1,8 @@
 
-// the message state of this game, displays the victory and defeat message
+/*
+	here we arrive after the game is over, its main purpose
+	is to display "game over" and spaceship explosion
+*/
 
 #pragma once
 
@@ -13,11 +16,23 @@ class game_over_state : public bb::BASE_STATE
 {
 	public:
 
-	sf::Text main_text_line1, main_text_line2, input_text;
 
+	// to display "game over"
+
+	sf::Text main_text_line1, main_text_line2;
+
+	// score is displayed here
+	
 	int score;
 
+	// highest score is not displayed here but sent to highest score state
+
 	int _highest_score;
+
+	// how long to wait before we go to highest score state
+	
+	double duration;
+
 
 	game_over_state()
 	{
@@ -27,7 +42,7 @@ class game_over_state : public bb::BASE_STATE
 
 		main_text_line1.setStyle(sf::Text::Bold);
 
-		center_origin(main_text_line1);
+		bb::setCenterOrigin(main_text_line1);
 
 		main_text_line1.setPosition(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT / 2.0f - 37);
 
@@ -38,19 +53,13 @@ class game_over_state : public bb::BASE_STATE
 
 		main_text_line2.setStyle(sf::Text::Bold);
 
-		center_origin(main_text_line2);
+		bb::setCenterOrigin(main_text_line2);
 
 		main_text_line2.setPosition(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT / 2.0f + 37);
-
-
-		input_text = medium_text;
-
-		input_text.setString("--- Press 'Enter' to Play Again ---");
-
-		center_origin(input_text);
-
-		input_text.setPosition(VIRTUAL_WIDTH / 2.0f, VIRTUAL_HEIGHT - 20);
 	}
+
+
+	// receiving score and heighest score from game state
 
 	void init(int score, int highest_score)
 	{
@@ -68,6 +77,11 @@ class game_over_state : public bb::BASE_STATE
 
 	void Enter()
 	{
+		/*
+			no need to delete the spaceship, just don't render it in this state
+			and create an explosion at its place
+		*/
+
 		auto entity = ecs.entity(0);
 
 		auto& sprite = entity.get<SPRITE>();
@@ -75,28 +89,36 @@ class game_over_state : public bb::BASE_STATE
 		auto& velocity = entity.get<VELOCITY>();
 
 		explosion.create(sprite.getPosition(), velocity);
+
+		/*
+			this state will display game over for certain duration, after that
+			we go to highest score state
+		*/
+		
+		duration = 3;
 	}
 
 
 	void Update(double dt)
 	{
-		if (bb::INPUT.isPressed(sf::Keyboard::Scan::Enter))
+		/*
+			when duration is 0 or less we go to highest score state
+
+			if user don't like to wait he can press "Enter" or "Escape" to go to highest score state
+		*/
+
+		if (duration < 0 || bb::INPUT.isPressed(sf::Keyboard::Scan::Enter) || bb::INPUT.isPressed(sf::Keyboard::Scan::Escape))
 		{
 			//sound.setBuffer(sound_buffer[SELECT]);
 
 			//sound.play();
 
-			if (_highest_score < score)
-			{
-				sm.change_to(highest_score, score);
-			}
-			else
-			{
-				sm.change_to(initial);
-			}
+			sm.change_to(highest_score, score, _highest_score);
 
 			return;
 		}
+
+		// update the asteroids in the ECS
 
 		for (size_t i = 0; i < ecs.entity_count(); i++)
 		{
@@ -114,15 +136,19 @@ class game_over_state : public bb::BASE_STATE
 			}
 		}
 
+		// update the explosions
+
 		explosion.update(dt);
+
+		// when duration is 0 we go to highest score state
+
+		duration -= dt;
 	}
 
 
 	void Render()
 	{
-		render_fps();
-
-		// render the buttons and the messages
+		// render the asteroids in the ECS
 
 		for (size_t i = 0; i < ecs.entity_count(); i++)
 		{
@@ -132,13 +158,17 @@ class game_over_state : public bb::BASE_STATE
 			}
 		}
 
+		// we still need to render a asteroid and spaceship explosion
+
 		bb::WINDOW.draw(explosion);
+
+		// rendering "game over"
 
 		bb::WINDOW.draw(main_text_line1);
 
 		bb::WINDOW.draw(main_text_line2);
 
-		bb::WINDOW.draw(input_text);
+		// render the score as game state
 
 		render_score(score);
 	}
@@ -146,6 +176,11 @@ class game_over_state : public bb::BASE_STATE
 
 	void Exit()
 	{
+		/*
+			finally at the end of game over state we clean up remaining assets,
+			main ECS and explosion
+		*/
+
 		ecs.clear();
 
 		explosion.clear();
