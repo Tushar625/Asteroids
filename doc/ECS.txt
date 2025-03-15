@@ -1,0 +1,35 @@
+
+The Entity Component System, here used to store 3 different types of "Entities"
+
+1. Spaceship
+2. Asteroids
+3. Bullets
+
+The "Components" of these entities are,
+
+1. Entity Type.
+2. Sprite
+3. Velocity
+
+Each Entity has all the components.
+
+The "System" is actually a bunch of functions, I seperate these functions into three
+namespaces, for three types of "Entities".
+
+====================================================================================
+
+In the game state we loop over each entity in Update(), and Render() functions.
+
+In Update() we Update their position, velocity, direction with corresponding functions
+according to Entity types.
+
+In Render() we Render them.
+
+To "Pause" the game, I simply stop updating ECS in Update().
+
+====================================================================================
+
+In this game, Enter() of game state creates the first Entities, if ECS is found empty,
+to start the game.
+
+After the game is over Exit() of game over state clears or empties the ECS.
