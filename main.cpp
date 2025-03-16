@@ -17,6 +17,10 @@ inline bool bb::Game::Create()
 
 	bb::WINDOW.setTitle("Astroids (Clone) V0.0.0");
 
+	// setting window position
+
+	bb::WINDOW.setPosition(sf::Vector2i(300, 150));
+
 	// setting window size and poxel size
 
 	bb::WINDOW.setSize(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT));
