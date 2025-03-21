@@ -12,6 +12,11 @@ sf::Font lunchds, Delicatus;
 sf::Text small_text, medium_text, large_text;
 
 
+// sounds
+
+sf::Music rocket_engine_sound;
+
+
 // particle system effects
 
 bb::Exhaust thrust, reverse_thrust;	// spaceship exhaust
@@ -88,6 +93,17 @@ class ASSET_LOADER
 		medium_text.setCharacterSize(MEDIUM_FONT_SIZE);
 			
 		large_text.setCharacterSize(LARGE_FONT_SIZE);
+
+
+
+		// loading sounds
+
+		if (!rocket_engine_sound.openFromFile("sound/rocket exhaust.wav"))
+		{
+			std::cout << "can't load rocket exhaust.wav\n";
+		}
+
+		rocket_engine_sound.setLoop(true);
 
 
 		

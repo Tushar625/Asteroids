@@ -130,5 +130,17 @@ namespace space_ship
 
 			velocity.y -= accn.y * dt;
 		}
+
+		// rocket engine sound
+
+		if (bb::INPUT.isPressed(sf::Keyboard::Scan::Up) || bb::INPUT.isPressed(sf::Keyboard::Scan::Down))
+		{
+			rocket_engine_sound.play();
+		}
+
+		if (bb::INPUT.isReleased(sf::Keyboard::Scan::Up) || bb::INPUT.isReleased(sf::Keyboard::Scan::Down))
+		{
+			rocket_engine_sound.stop();
+		}
 	}
 }

@@ -16,6 +16,12 @@
 
 
 
+// SFML components
+
+#include<SFML/Audio.hpp>
+
+
+
 // standard c++ components
 
 #include<iostream>	// only for debugging

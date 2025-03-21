@@ -268,6 +268,10 @@ private:
 	void Exit()
 	{
 		//music.stop();
+
+		// if the space ship explods while the thrust sound is active, we need to stop it here
+
+		rocket_engine_sound.stop();
 	}
 
 }game;
