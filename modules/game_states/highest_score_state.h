@@ -84,8 +84,6 @@ public:
 
 private:
 
-	//sf::Sound sound;
-
 
 	void Enter()
 	{
@@ -101,6 +99,22 @@ private:
 		{
 			if (delay < 0)
 			{
+				{
+					static sf::Sound sound;
+
+					// ship is gone
+
+					sound.setBuffer(firecracker_sound);
+
+					sound.setVolume(((rand() % 501 + 500) / 1000.0) * 100);	// .5 -> 1
+
+					// we change pitch to make each explosion sound different
+
+					sound.setPitch(((rand() % 1001 + 500) / 1000.0));	// .5 -> 1.5
+
+					sound.play();
+				}
+
 				explosion.create(sf::Vector2f(rand() % VIRTUAL_WIDTH, rand() % VIRTUAL_HEIGHT), sf::Vector2f(0, 0), sf::Color::White, 10000, 80 + rand() % 100, 1 + rand() % 4);
 
 				delay = (rand() % 1000) / 1000.0;	// reset random delay
@@ -117,6 +131,8 @@ private:
 
 		if (bb::INPUT.isPressed(sf::Keyboard::Scan::Enter) || bb::INPUT.isPressed(sf::Keyboard::Scan::Escape))
 		{
+			click();
+
 			sm.change_to(initial);
 		}
 	}
@@ -138,8 +154,6 @@ private:
 
 	void Exit()
 	{
-		//music.stop();
-
 		// clearing all the explosions this state creates
 
 		explosion.clear();

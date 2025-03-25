@@ -21,6 +21,16 @@ namespace bullet
 
 	void create(const vector_sprite_class& space_ship_sprite, const sf::Vector2f& space_ship_velocity)
 	{
+		{
+			static sf::Sound sound;
+
+			// play cannon sound
+
+			sound.setBuffer(cannon_sound);
+
+			sound.play();
+		}
+
 		auto ball = ecs.create_entity();
 
 		ball.get<ENTITY_TYPE>() = BULLET_ENTITY;

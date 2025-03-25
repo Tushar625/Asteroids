@@ -67,18 +67,12 @@ public:
 
 private:
 
-	//sf::Sound sound;
-
 
 	void Enter()
 	{
 		// display the highest score
 
 		score_text.setString(std::to_string(i_data.highest_score));
-
-		//music.setLoop(true);
-
-		//music.play();
 
 		// creating some asteroids for background
 
@@ -95,9 +89,7 @@ private:
 	{
 		if (bb::INPUT.isPressed(sf::Keyboard::Scan::Enter))
 		{
-			//sound.setBuffer(sound_buffer[CONFIRM]);
-
-			//sound.play();
+			click();
 
 			// send a pointer to i_data to game state
 
@@ -148,7 +140,6 @@ private:
 		// destroy background ecs
 
 		bg_ecs.clear();
-		//music.stop();
 	}
 
 }initial;

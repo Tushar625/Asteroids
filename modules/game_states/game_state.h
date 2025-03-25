@@ -70,6 +70,8 @@ private:
 
 		if (bb::INPUT.isPressed(sf::Keyboard::Scan::Escape))
 		{
+			click();
+
 			sm.change_to(initial);
 
 			return;
@@ -77,6 +79,8 @@ private:
 
 		if (bb::INPUT.isPressed(sf::Keyboard::Scan::P))
 		{
+			click();
+
 			pause = !pause;
 		}
 
@@ -130,6 +134,24 @@ private:
 					{
 						// this asteroid has collided with the spaceship
 
+						{
+							static sf::Sound sound;
+
+							// play spaceship hit sound
+
+							sound.setBuffer(ship_hit_sound);
+
+							// 0 < scale < 2 ~ 0 < volume < 100
+
+							sound.setVolume(50 * sprite.get_scale());
+
+							// we change pitch to make each impact sound different
+
+							sound.setPitch(((rand() % 501 + 500) / 1000.0));	// .5 -> 1
+
+							sound.play();
+						}
+
 						// need a nice space explosion at its place
 						
 						explosion.create(sprite.getPosition(), sf::Vector2f(velocity.x * 5, velocity.y * 5));
@@ -141,10 +163,30 @@ private:
 						if (i_data->health)
 						{
 							i_data->health--;
+
+							{
+								static sf::Sound sound;
+
+								// play warning sound
+
+								sound.setBuffer(warning_sound);
+
+								sound.play();
+							}
 						}
 						else
 						{
 							// game over
+
+							{
+								static sf::Sound sound;
+
+								// ship is gone
+
+								sound.setBuffer(ship_explosion_sound);
+
+								sound.play();
+							}
 
 							sm.change_to(game_over, i_data->score, i_data->highest_score);
 
@@ -267,8 +309,6 @@ private:
 
 	void Exit()
 	{
-		//music.stop();
-
 		// if the space ship explods while the thrust sound is active, we need to stop it here
 
 		rocket_engine_sound.stop();

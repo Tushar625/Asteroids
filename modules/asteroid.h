@@ -101,6 +101,24 @@ namespace asteroid
 
 		ecs.kill_entity(entity);
 
+		{
+			static sf::Sound sound;
+
+			// play asteroid explosion sound
+
+			sound.setBuffer(asteroid_blast_sound);
+
+			// 0 < scale < 2 ~ 0 < volume < 100
+
+			sound.setVolume(50 * scale);
+
+			// we change pitch to make each explosion sound different
+
+			sound.setPitch(((rand() % 501 + 700) / 1000.0));	// .7 -> 1.2
+
+			sound.play();
+		}
+
 		// create an explosion effect in the place of destroyed asteroid using the bullet's velocity
 
 		/*
@@ -114,7 +132,7 @@ namespace asteroid
 
 		// no. of particles in the explosion is dependent on the scale of the asteroid
 
-		explosion.create(pos, velocity, sf::Color::White, 1000 * scale);
+		explosion.create(pos, velocity, sf::Color::White, 2000 * scale);
 
 		if(scale < .9)
 		{

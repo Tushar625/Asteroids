@@ -39,3 +39,16 @@ inline void render_score(int score)
 
 	bb::WINDOW.draw(medium_text);
 }
+
+
+
+void click()
+{
+	static sf::Sound sound;
+
+	// play warning sound
+
+	sound.setBuffer(button_sound);
+
+	sound.play();
+}

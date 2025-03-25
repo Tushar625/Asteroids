@@ -72,9 +72,6 @@ class game_over_state : public bb::BASE_STATE
 	private:
 
 
-	//sf::Sound sound;
-
-
 	void Enter()
 	{
 		/*
@@ -107,11 +104,16 @@ class game_over_state : public bb::BASE_STATE
 			if user don't like to wait he can press "Enter" or "Escape" to go to highest score state
 		*/
 
-		if (duration < 0 || bb::INPUT.isPressed(sf::Keyboard::Scan::Enter) || bb::INPUT.isPressed(sf::Keyboard::Scan::Escape))
+		if (duration < 0)
 		{
-			//sound.setBuffer(sound_buffer[SELECT]);
+			sm.change_to(highest_score, score, _highest_score);
 
-			//sound.play();
+			return;
+		}
+
+		if (bb::INPUT.isPressed(sf::Keyboard::Scan::Enter) || bb::INPUT.isPressed(sf::Keyboard::Scan::Escape))
+		{
+			click();
 
 			sm.change_to(highest_score, score, _highest_score);
 
