@@ -90,6 +90,8 @@ private:
 		// to get the explosions started
 
 		delay = -1;
+
+		score_background_music.play();	// paused in the same state
 	}
 
 
@@ -157,6 +159,8 @@ private:
 		// clearing all the explosions this state creates
 
 		explosion.clear();
+
+		score_background_music.pause();
 	}
 
 }highest_score;

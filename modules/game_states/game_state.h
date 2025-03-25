@@ -56,6 +56,20 @@ private:
 				asteroid::create(ecs);
 			}
 		}
+
+		// space background music is paused in initial state and game over state
+
+		space_background_music.play();
+
+		{
+			static sf::Sound sound;
+
+			// play distress sound
+
+			sound.setBuffer(distress_sound);
+
+			sound.play();
+		}
 	}
 
 

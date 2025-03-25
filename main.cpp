@@ -15,7 +15,7 @@ inline bool bb::Game::Create()
 {
 	// setting window title
 
-	bb::WINDOW.setTitle("Astroids (Clone) V0.0.0");
+	bb::WINDOW.setTitle("Astroids (Clone) V1.0.0");
 
 	// setting window position
 

@@ -186,6 +186,8 @@ class game_over_state : public bb::BASE_STATE
 		ecs.clear();
 
 		explosion.clear();
+
+		space_background_music.pause();
 	}
 
 }game_over;

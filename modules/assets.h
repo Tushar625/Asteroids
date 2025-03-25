@@ -14,9 +14,9 @@ sf::Text small_text, medium_text, large_text;
 
 // sounds
 
-sf::Music rocket_engine_sound, background_music;
+sf::Music rocket_engine_sound, space_background_music, initial_background_music, score_background_music;
 
-sf::SoundBuffer asteroid_blast_sound, cannon_sound, ship_hit_sound, warning_sound, ship_explosion_sound, firecracker_sound, button_sound;
+sf::SoundBuffer asteroid_blast_sound, cannon_sound, ship_hit_sound, warning_sound, ship_explosion_sound, firecracker_sound, button_sound, distress_sound;
 
 
 // particle system effects
@@ -107,16 +107,33 @@ class ASSET_LOADER
 
 		rocket_engine_sound.setLoop(true);
 
-		if (!background_music.openFromFile("sound/space bg.mp3"))
+		if (!space_background_music.openFromFile("sound/space bg.mp3"))
 		{
 			std::cout << "can't load space bg.mp3\n";
 		}
 
-		background_music.setLoop(true);
+		space_background_music.setLoop(true);
 
-		background_music.setVolume(25);
+		space_background_music.setVolume(25);
 
-		background_music.play();
+		if (!initial_background_music.openFromFile("sound/initial bg.wav"))
+		{
+			std::cout << "can't load initial bg.wav\n";
+		}
+
+		initial_background_music.setLoop(true);
+
+		initial_background_music.setVolume(25);
+
+		if (!score_background_music.openFromFile("sound/score bg.mp3"))
+		{
+			std::cout << "can't load score bg.mp3\n";
+		}
+
+		score_background_music.setLoop(true);
+
+		score_background_music.setVolume(25);
+
 
 		if (!asteroid_blast_sound.loadFromFile("sound/asteroid blast.mp3"))
 		{
@@ -153,6 +170,11 @@ class ASSET_LOADER
 			std::cout << "can't load button.wav\n";
 		}
 
+		if (!distress_sound.loadFromFile("sound/distress-signal.mp3"))
+		{
+			std::cout << "can't load distress-signal.mp3\n";
+		}
+
 		
 		// setting thrust and reverse thrust
 
@@ -187,10 +209,5 @@ class ASSET_LOADER
 		// make the spaceship point up
 
 		heart_sprite.setRotation(-90);
-	}
-
-	~ASSET_LOADER()
-	{
-		background_music.stop();
 	}
 }asset_loader;

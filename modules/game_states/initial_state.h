@@ -82,6 +82,12 @@ private:
 		{
 			asteroid::create(bg_ecs);
 		}
+
+		// pausing space_background_music while returning from game state
+
+		space_background_music.pause();
+
+		initial_background_music.play();	// paused in the same state
 	}
 
 
@@ -140,6 +146,8 @@ private:
 		// destroy background ecs
 
 		bg_ecs.clear();
+
+		initial_background_music.pause();
 	}
 
 }initial;

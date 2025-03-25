@@ -110,11 +110,11 @@ namespace asteroid
 
 			// 0 < scale < 2 ~ 0 < volume < 100
 
-			sound.setVolume(50 * scale);
+			sound.setVolume(37.5 * scale);
 
 			// we change pitch to make each explosion sound different
 
-			sound.setPitch(((rand() % 501 + 700) / 1000.0));	// .7 -> 1.2
+			sound.setPitch(((rand() % 301 + 700) / 1000.0));	// .7 -> 1
 
 			sound.play();
 		}

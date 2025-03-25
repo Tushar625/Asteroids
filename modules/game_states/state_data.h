@@ -16,12 +16,12 @@ struct game_data_type
 
 	game_data_type() : highest_score(0), score(0), health(MAX_HEALTH)
 	{
-		//bb::load_local_appdata("Astroids_data.bin", *this);
+		bb::load_local_appdata("Astroids_data.bin", *this);
 	}
 
 	~game_data_type()
 	{
-		//bb::store_local_appdata("Astroids_data.bin", *this);
+		bb::store_local_appdata("Astroids_data.bin", *this);
 	}
 
 	// after game is over this functon is used to reset the general game data
@@ -33,12 +33,6 @@ struct game_data_type
 		if (score > highest_score)
 		{
 			// new highest score
-
-			/*sf::Sound sound;
-
-			sound.setBuffer(sound_buffer[HIGH_SCORE]);
-
-			sound.play();*/
 
 			highest_score = score;
 		}
