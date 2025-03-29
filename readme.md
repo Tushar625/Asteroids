@@ -5,9 +5,9 @@ Try the game yourself:
 
 https://tushar625.itch.io/asteroids-2025-modern-thrills-retro-vibes
 
-Check out the demo in the link below.
+Click the image below to check out the demo.
 
-[![Watch the video](https://img.youtube.com/vi/HvF-Kmfv774/maxresdefault.jpg)](https://youtu.be/HvF-Kmfv774?si=d1T0tJT2gderdvln)
+[![Watch the video](https://github.com/user-attachments/assets/9c071a7a-53b7-4b62-bb69-459be564cd7c)](https://youtu.be/HvF-Kmfv774?si=d1T0tJT2gderdvln)
 
 ***
 
